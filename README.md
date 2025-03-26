@@ -1,2 +1,2 @@
 # react_ticTacToe
-Tutorial
+[Tutorial](https://react.dev/learn/tutorial-tic-tac-toe)
