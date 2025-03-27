@@ -11,11 +11,16 @@ function Square({ value, onSquareClick }) {
 function Board() {
 
   const [squares, setSquares] = React.useState(Array(9).fill(null));
+  const [xIsNext, setXIsNext] = React.useState(true);
 
   function handleClick(i) {
-    const nextSquares = squares.slice();  // Kopie vom aktuellen Array
-    nextSquares[i] = "X";                 // Feld i bekommt ein "X"
-    setSquares(nextSquares);              // Neuer Zustand wird gesetzt
+    if (squares[i]) return;                 // Wenn Feld schon belegt --> nichts tun
+
+    const nextSquares = squares.slice();    // Kopie vom aktuellen Array
+    nextSquares[i] = xIsNext ? "X" : "O";   // Setze "X" oder "O" je nach Spieler
+
+    setSquares(nextSquares);
+    setXIsNext(!xIsNext);                   // Spielerwechsel
   }
 
   return (

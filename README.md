@@ -16,6 +16,13 @@ If you are developing a production application, we recommend using TypeScript an
 
 # Commands
 
+Set up template with vite
+* npm create vite@latest react_ticTacToe -- --template react
+    * choose 'react'
+    * choose 'JavaScript'
+    * cd react_ticTacToe
+
+
 In file ".\react_ticTacToe"
 
 * npm install
