@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 function calculateWinner (squares) {
   const lines = [
@@ -27,18 +27,14 @@ function Square({ value, onSquareClick }) {
   );
 }
 
-function Board() {
-  const [squares, setSquares] = React.useState(Array(9).fill(null));
-  const [xIsNext, setXIsNext] = React.useState(true);
+function Board({ xIsNext, squares, onPlay }) {
 
   function handleClick(i) {
     if (squares[i] || calculateWinner(squares)) return;   // wenn schon belegt oder Gewinner fest steht --> nichts tun
 
     const nextSquares = squares.slice();    // Kopie vom aktuellen Array
     nextSquares[i] = xIsNext ? "X" : "O";   // Setze "X" oder "O" je nach Spieler
-
-    setSquares(nextSquares);
-    setXIsNext(!xIsNext);                   // Spielerwechsel
+    onPlay(nextSquares);
   }
 
   const winner = calculateWinner(squares);
@@ -74,10 +70,46 @@ function Board() {
 }
 
 function App() {
+  const [history, setHistory] = React.useState([Array(9).fill(null)]);
+  const [currentMove, setCurrentMove] = React.useState(0);
+
+  const xIsNext = currentMove %2 === 0;
+  const currentSquares = history[currentMove];
+
+  function handlePlay(nextSquares) {
+    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+    setHistory(nextHistory);
+    setCurrentMove(nextHistory.length - 1);
+  }
+  
+  function jumpTo(move) {
+    setCurrentMove(move);
+  }
+
+  const moves = history.map((squares, move) => {
+    let description;
+    if (move > 0) {
+      description = "Gehe zu Zug #" + move;
+    } else {
+      description = "Spiel neu starten";
+    }
+
+    return (
+      <li key={move}>
+        <button onClick={() => jumpTo(move)}>{description}</button>
+      </li>
+    );
+  });
+
+
   return (
-    <div>
-      <h1>Tic Tac Toe</h1>
-      <Board />
+    <div className='game'>
+      <div className='game-board'>
+        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+      </div>
+      <div className='game-info'>
+        <ol>{moves}</ol>
+      </div>
     </div>
   );
 }
